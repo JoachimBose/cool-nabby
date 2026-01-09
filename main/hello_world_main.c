@@ -22,6 +22,8 @@
 #define GPIO_LED_PIN 15
 #define SENSOR_PIN 23
 
+#define STEP 10
+
 void do_pwm_stuff() {
   // gpio_config_t gpio = {
   //   .intr_type = GPIO_INTR_DISABLE,
@@ -60,9 +62,14 @@ void app_main(void) {
   printf("Hello Raj! pwm2!\n");
   do_pwm_stuff();
 
-  for (int i = 5; i >= 0; i--) {
-    printf("Restarting in %d seconds...\n", i);
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
+  for (int j = 0; j < 5; j++) {
+    for (int i = STEP; i >= 0; i--) {
+      ESP_ERROR_CHECK(ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, (1024 / STEP) * i));
+      ESP_ERROR_CHECK(ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0));
+      printf("Setting duty to %d %lx \n", i, ledc_get_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0));
+      vTaskDelay(100 / portTICK_PERIOD_MS);
+    }
+    printf("Restarting in %d seconds...\n", j);
   }
   printf("Restarting now.\n");
   fflush(stdout);

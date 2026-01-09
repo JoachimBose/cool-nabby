@@ -12,7 +12,7 @@ RUN ./install.sh
 
 RUN mkdir -p /esp
 
-RUN apt-get install -y usbutils minicom nano bear
+RUN apt-get install -y usbutils minicom nano bear clangd
 
 WORKDIR /src
 ENTRYPOINT [ "/src/entrypoint.sh" ]
